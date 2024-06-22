@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import Calendar from './Calendar.js';
+import Timer from './Timer.js';
 import Home from './Home.js';
 import { ChakraProvider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
@@ -16,7 +17,7 @@ function App() {
     <ChakraProvider>
       <div id="App">
         <h1>Flow</h1>
-        <h2>The better way to manage yourself</h2>
+        <h2>Simplifying Your Day, All in One</h2>
         <Tabs index={tabIndex} onChange={handleTabChange} variant='soft-rounded' colorScheme='blue'>
           <TabList>
             <Tab>Calendar</Tab>
@@ -30,11 +31,11 @@ function App() {
               <Calendar />
             </TabPanel>
             <TabPanel>
-              <div id="container">
-                <Home />
-              </div>
+             
             </TabPanel>
-            {/* Add TabPanel for other tabs if needed */}
+            <TabPanel>
+              <Timer />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       </div>
