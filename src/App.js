@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Calendar from './Calendar.js';
 import Timer from './Timer.js';
 import Home from './Home.js';
+import Alarm from './Alarm.js';
 import { ChakraProvider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
             </TabPanel>
             <TabPanel>
               <Timer />
+            </TabPanel>
+            <TabPanel>
+              <Alarm />
             </TabPanel>
           </TabPanels>
         </Tabs>
