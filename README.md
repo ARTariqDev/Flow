@@ -7,6 +7,8 @@ An all-in-one planner app allowing you to set timers, events, alarms, or make a 
 - **Calendar** (Events have yet to be added)
 - **Timers**
 - **Alarms**
+- **Stopwatch**
+- **To-Do List**
 
 ## Planned Features for the Completed App
 
