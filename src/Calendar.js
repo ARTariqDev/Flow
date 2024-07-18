@@ -6,7 +6,7 @@ export default function Calendar() {
     <FullCalendar
       plugins={[ dayGridPlugin ]}
       initialView="dayGridMonth"
-      style={{color: '#ffffff'}}
+      style={{color: '#ffffff',height:'100vh'}}
     />
   )
 }

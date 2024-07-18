@@ -134,6 +134,7 @@ const Timer = () => {
 
   return (
     <div className="timer">
+      <h1>Timer</h1>
       <div className="timer-setter">
         <h2>Set Timer</h2>
         <form onSubmit={handleFormSubmit}>

@@ -58,6 +58,7 @@ const Alarm = () => {
 
   return (
     <div className="alarm-container">
+      <h1>Alarm</h1>
       <div className="alarm-setter">
         <input 
           type="time" 

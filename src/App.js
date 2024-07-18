@@ -4,7 +4,10 @@ import Calendar from './Calendar.js';
 import Timer from './Timer.js';
 import Home from './Home.js';
 import Alarm from './Alarm.js';
+import StopWatch from './Stopwatch.js';
+import TodoList from './ToDo.js';
 import { ChakraProvider, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0); // Initialize tabIndex state with 0
@@ -32,13 +35,16 @@ function App() {
               <Calendar />
             </TabPanel>
             <TabPanel>
-             
+             <TodoList />
             </TabPanel>
             <TabPanel>
               <Timer />
             </TabPanel>
             <TabPanel>
               <Alarm />
+            </TabPanel>
+            <TabPanel>
+                <StopWatch />
             </TabPanel>
           </TabPanels>
         </Tabs>
