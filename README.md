@@ -7,8 +7,6 @@ An all-in-one planner app allowing you to set timers, events, alarms, or make a 
 - **Calendar** (Events have yet to be added)
 - **Timers**
 - **Alarms**
-- **Stopwatch**
-- **To-Do List**
 
 ## Planned Features for the Completed App
 
@@ -18,13 +16,3 @@ An all-in-one planner app allowing you to set timers, events, alarms, or make a 
 - **Stopwatch**
 - **To-Do List**
 - **Dynamic Home Screen**: Displays any upcoming events, your current/remaining to-dos, any upcoming alarms, active timers, or an active stopwatch.
-
-
-## Steps to Run the App
-- do git clone or download as zip
-- npm install (to download dependencies)
-- npm install axios
-- npm install react-switch
-- Then do npm start to start react Frontend
-- Then do node server.js to start Backend
-  
