@@ -5,13 +5,37 @@ import './App.css';
 
 const Alarm = () => {
   const [alarms, setAlarms] = useState(() => {
-    // Load alarms from localStorage if available
     const savedAlarms = localStorage.getItem('alarms');
     return savedAlarms ? JSON.parse(savedAlarms) : [];
   });
+
   const [time, setTime] = useState('');
   const [intervalId, setIntervalId] = useState(null);
   const [activeAlarmIndex, setActiveAlarmIndex] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('alarms', JSON.stringify(alarms));
+
+    const checkAlarms = setInterval(() => {
+      const now = new Date();
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      
+      alarms.forEach((alarm, index) => {
+        if (alarm.isActive && alarm.time === currentTime && !alarm.isRinging) {
+          const audio = document.getElementById('alarm-audio');
+          audio.play();
+          audio.loop = true;
+          setIntervalId(setInterval(() => {
+            audio.play();
+          }, 1000));
+          setActiveAlarmIndex(index);
+          setAlarms(alarms.map((alarm, i) => i === index ? { ...alarm, isRinging: true } : alarm));
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(checkAlarms);
+  }, [alarms]);
 
   const handleAddAlarm = () => {
     setAlarms([...alarms, { time, isActive: true, isRinging: false }]);
@@ -38,31 +62,6 @@ const Alarm = () => {
     setActiveAlarmIndex(null);
     setAlarms(alarms.map(alarm => ({ ...alarm, isRinging: false, isActive: false }))); // Mark the alarm as inactive
   };
-
-  useEffect(() => {
-    // Save alarms to localStorage when it changes
-    localStorage.setItem('alarms', JSON.stringify(alarms));
-
-    const checkAlarms = setInterval(() => {
-      const now = new Date();
-      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      
-      alarms.forEach((alarm, index) => {
-        if (alarm.isActive && alarm.time === currentTime && !alarm.isRinging) {
-          const audio = document.getElementById('alarm-audio');
-          audio.play();
-          audio.loop = true;
-          setIntervalId(setInterval(() => {
-            audio.play();
-          }, 1000));
-          setActiveAlarmIndex(index);
-          setAlarms(alarms.map((alarm, i) => i === index ? { ...alarm, isRinging: true } : alarm));
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(checkAlarms);
-  }, [alarms]);
 
   return (
     <div className="alarm-container">
@@ -95,7 +94,9 @@ const Alarm = () => {
           </div>
         ))}
       </div>
-      <audio id="alarm-audio" src={audio}></audio>
+      <audio id="alarm-audio">
+        <source src={audio} type="audio/mp3" />
+      </audio>
     </div>
   );
 };

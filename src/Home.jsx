@@ -1,93 +1,119 @@
-// Home.jsx
-import './App.css';
 import React, { useState, useEffect } from 'react';
+import './App.css';
 
 const Home = () => {
-  const [events, setEvents] = useState([]);
-  const [timers, setTimers] = useState([]);
-  const [alarms, setAlarms] = useState([]);
-  
-  const STORAGE_KEY_EVENTS = 'calendarEvents';
-  const STORAGE_KEY_TIMERS = 'activeTimers';
-  const STORAGE_KEY_ALARMS = 'activeAlarms';
+  const [timers, setTimers] = useState(() => {
+    const savedTimers = localStorage.getItem('timers');
+    return savedTimers ? JSON.parse(savedTimers) : [];
+  });
+
+  const [events, setEvents] = useState(() => {
+    const savedEvents = localStorage.getItem('events');
+    return savedEvents ? JSON.parse(savedEvents) : [];
+  });
 
   useEffect(() => {
-    // Load events
-    const storedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY_EVENTS)) || [];
-    setEvents(storedEvents);
-
-    // Load timers
-    const storedTimers = JSON.parse(localStorage.getItem(STORAGE_KEY_TIMERS)) || [];
-    setTimers(storedTimers);
-
-    // Load alarms
-    const storedAlarms = JSON.parse(localStorage.getItem(STORAGE_KEY_ALARMS)) || [];
-    setAlarms(storedAlarms);
-  }, []);
-
-  useEffect(() => {
-    // Set up an interval to update timers
-    const intervalId = setInterval(() => {
-      const updatedTimers = timers.map(timer => {
-        if (timer.timeLeft > 0) {
-          return { ...timer, timeLeft: timer.timeLeft - 1 };
-        }
-        return timer;
-      }).filter(timer => timer.timeLeft > 0);
-
-      setTimers(updatedTimers);
-
-      // Save updated timers to localStorage
-      localStorage.setItem(STORAGE_KEY_TIMERS, JSON.stringify(updatedTimers));
-    }, 1000); // Update every second
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    localStorage.setItem('timers', JSON.stringify(timers));
   }, [timers]);
 
-  return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Home</h1>
+  useEffect(() => {
+    localStorage.setItem('events', JSON.stringify(events));
+  }, [events]);
 
-      <section style={{ marginBottom: '20px' }}>
+  const addEvent = (title, date) => {
+    const newEvent = { id: Date.now(), title, date };
+    setEvents([...events, newEvent]);
+  };
+
+  const removeEvent = (id) => {
+    setEvents(events.filter(event => event.id !== id));
+  };
+
+  return (
+    <div className="home">
+      <h1>Timers and Events</h1>
+      <div className="timer-cards">
+        <h2>Timers</h2>
+        {timers.length > 0 ? (
+          timers.map(timer => (
+            <div key={timer.id} className="timer-card">
+              <div className="time-display">
+                {timer.time}
+              </div>
+              {timer.isRinging && <p>Timer up!</p>}
+              <div className="timer-buttons">
+                <button onClick={() => startTimer(timer.id)}>Start</button>
+                <button onClick={() => stopTimer(timer.id)}>Stop</button>
+                <button onClick={() => restartTimer(timer.id)}>Reset</button>
+                <button onClick={() => removeTimer(timer.id)}>Remove</button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No timers set.</p>
+        )}
+      </div>
+      <div className="event-cards">
         <h2>Upcoming Events</h2>
         {events.length > 0 ? (
-          events.map((event, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <p>{event.title} - {event.date}</p>
+          events.map(event => (
+            <div key={event.id} className="event-card">
+              <div className="event-title">
+                {event.title}
+              </div>
+              <div className="event-date">
+                {new Date(event.date).toLocaleString()}
+              </div>
+              <button onClick={() => removeEvent(event.id)}>Remove</button>
             </div>
           ))
         ) : (
           <p>No upcoming events.</p>
         )}
-      </section>
-
-      <section style={{ marginBottom: '20px' }}>
-        <h2>Active Timers</h2>
-        {timers.length > 0 ? (
-          timers.map((timer, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <p>{timer.name} - {timer.timeLeft} seconds left</p>
-            </div>
-          ))
-        ) : (
-          <p>No active timers.</p>
-        )}
-      </section>
-
-      <section>
-        <h2>Active Alarms</h2>
-        {alarms.length > 0 ? (
-          alarms.map((alarm, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <p>{alarm.time} - {alarm.message}</p>
-            </div>
-          ))
-        ) : (
-          <p>No active alarms.</p>
-        )}
-      </section>
+      </div>
     </div>
   );
+
+  // Timer control functions
+  const startTimer = (id) => {
+    setTimers(timers.map(timer => {
+      if (timer.id === id && timer.seconds > 0 && !timer.isRunning) {
+        return { ...timer, isRunning: true, isRinging: false };
+      }
+      return timer;
+    }));
+  };
+
+  const stopTimer = (id) => {
+    setTimers(timers.map(timer => {
+      if (timer.id === id) {
+        return { ...timer, isRunning: false, isRinging: false };
+      }
+      return timer;
+    }));
+  };
+
+  const restartTimer = (id) => {
+    setTimers(timers.map(timer => {
+      if (timer.id === id) {
+        const hours = Math.floor(timer.initialSeconds / 3600);
+        const minutes = Math.floor((timer.initialSeconds % 3600) / 60);
+        const seconds = timer.initialSeconds % 60;
+        return {
+          ...timer,
+          time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
+          seconds: timer.initialSeconds,
+          isRunning: false,
+          isRinging: false,
+        };
+      }
+      return timer;
+    }));
+  };
+
+  const removeTimer = (id) => {
+    setTimers(timers.filter(timer => timer.id !== id));
+  };
 };
 
 export default Home;
