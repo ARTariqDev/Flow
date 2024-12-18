@@ -1,8 +1,19 @@
-# React + Vite
+# FLOW - All-in-One Planner App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FLOW is a simple and efficient planner app built with React.js, designed to help you manage your day-to-day "flow."  
 
-Currently, two official plugins are available:
+## Features  
+- **To-Do List**:  
+  Create, toggle, and delete tasks to stay organized.  
+- **Timers**:  
+  Start, pause, and reset timers to track activities effectively.  
+- **Events**:  
+  Schedule and view events on an intuitive calendar.  
+- **Alarms**:  
+  Set alarms and get notified when they ring.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started  
+1. Clone the repository:  
+   ```bash
+   git clone <repository-url>
+   cd FLOW
