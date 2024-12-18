@@ -5,7 +5,7 @@ import Calendar from './Calendar';
 import Timer from './Timer';
 import Alarm from './Alarm';
 import StopWatch from './StopWatch';
-import TodoList from './ToDo';
+import TodoList from './TodoList';
 import Home from './Home'; // Import the Home component
 
 function App() {

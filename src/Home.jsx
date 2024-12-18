@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import TodoList from './TodoList'; // Import the TodoList component
 
 const Home = () => {
   const [timers, setTimers] = useState(() => {
@@ -12,6 +13,16 @@ const Home = () => {
     return savedEvents ? JSON.parse(savedEvents) : [];
   });
 
+  const [alarms, setAlarms] = useState(() => {
+    const savedAlarms = localStorage.getItem('alarms');
+    return savedAlarms ? JSON.parse(savedAlarms) : [];
+  });
+
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem('todos');
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
+
   useEffect(() => {
     localStorage.setItem('timers', JSON.stringify(timers));
   }, [timers]);
@@ -19,6 +30,14 @@ const Home = () => {
   useEffect(() => {
     localStorage.setItem('events', JSON.stringify(events));
   }, [events]);
+
+  useEffect(() => {
+    localStorage.setItem('alarms', JSON.stringify(alarms));
+  }, [alarms]);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const addEvent = (title, date) => {
     const newEvent = { id: Date.now(), title, date };
@@ -29,10 +48,28 @@ const Home = () => {
     setEvents(events.filter(event => event.id !== id));
   };
 
+  const addAlarm = (time) => {
+    const newAlarm = { id: Date.now(), time, isRinging: false };
+    setAlarms([...alarms, newAlarm]);
+  };
+
+  const removeAlarm = (id) => {
+    // Stop the alarm if it is ringing
+    setAlarms(alarms.map(alarm => {
+      if (alarm.id === id && alarm.isRinging) {
+        return { ...alarm, isRinging: false };
+      }
+      return alarm;
+    }));
+    // Remove the alarm
+    setAlarms(alarms.filter(alarm => alarm.id !== id));
+  };
+
   return (
     <div className="home">
-      <h1>Timers and Events</h1>
-      <div className="timer-cards">
+      <h1>Timers, Events, Alarms, and To-Do List</h1>
+      
+      <div className="section">
         <h2>Timers</h2>
         {timers.length > 0 ? (
           timers.map(timer => (
@@ -53,7 +90,8 @@ const Home = () => {
           <p>No timers set.</p>
         )}
       </div>
-      <div className="event-cards">
+
+      <div className="section">
         <h2>Upcoming Events</h2>
         {events.length > 0 ? (
           events.map(event => (
@@ -70,6 +108,28 @@ const Home = () => {
         ) : (
           <p>No upcoming events.</p>
         )}
+      </div>
+
+      <div className="section">
+        <h2>Alarms</h2>
+        {alarms.length > 0 ? (
+          alarms.map(alarm => (
+            <div key={alarm.id} className="alarm-card">
+              <div className="alarm-time">
+                {alarm.time}
+              </div>
+              {alarm.isRinging && <p>Alarm ringing!</p>}
+              <button onClick={() => removeAlarm(alarm.id)}>Remove</button>
+            </div>
+          ))
+        ) : (
+          <p>No alarms set.</p>
+        )}
+      </div>
+
+      <div className="section">
+        <h2>To-Do List</h2>
+        <TodoList />
       </div>
     </div>
   );

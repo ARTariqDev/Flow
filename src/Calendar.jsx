@@ -23,6 +23,10 @@ export default function Calendar() {
     }
   };
 
+  const removeEvent = (index) => {
+    setEvents(events.filter((_, i) => i !== index));
+  };
+
   return (
     <div>
       <button onClick={addEvent}>Add Event</button>
@@ -31,6 +35,23 @@ export default function Calendar() {
         initialView="dayGridMonth"
         events={events}
       />
+      <div className="event-cards">
+        {events.length > 0 ? (
+          events.map((event, index) => (
+            <div key={index} className="event-card">
+              <div className="event-title">
+                {event.title}
+              </div>
+              <div className="event-date">
+                {new Date(event.date).toLocaleString()}
+              </div>
+              <button onClick={() => removeEvent(index)}>Remove</button>
+            </div>
+          ))
+        ) : (
+          <p>No upcoming events.</p>
+        )}
+      </div>
     </div>
   );
 }
