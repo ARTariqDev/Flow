@@ -1,6 +1,6 @@
 # FLOW - All-in-One Planner App  
 
-FLOW is a simple and efficient planner app built with React.js, designed to help you manage your day-to-day "flow."  
+FLOW is a simple and efficient planner app built with React.js and Vite, designed to help you manage your day-to-day "flow."  
 
 ## Features  
 - **To-Do List**:  
@@ -15,5 +15,5 @@ FLOW is a simple and efficient planner app built with React.js, designed to help
 ## Getting Started  
 1. Clone the repository:  
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ARTariqDev/Flow.git
    cd FLOW
