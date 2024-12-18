@@ -8,6 +8,18 @@
   padding: 0;
 }
 
+button {
+  background-color: #0759ff;
+  border-radius: 0.6em;
+  -webkit-border-radius: 0.6em;
+  -moz-border-radius: 0.6em;
+  -ms-border-radius: 0.6em;
+  -o-border-radius: 0.6em;
+  border: 0.1em solid #191D43;
+  padding: 1em;
+  font-weight: bold;
+}
+
 .tabs {
   display: flex;
   flex-direction: column;

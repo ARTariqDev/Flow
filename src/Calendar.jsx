@@ -23,13 +23,27 @@ export default function Calendar() {
     }
   };
 
-  const removeEvent = (index) => {
-    setEvents(events.filter((_, i) => i !== index));
+  const removeEvent = () => {
+    if (events.length === 0) {
+      alert('No events to remove!');
+      return;
+    }
+    const eventTitles = events.map((event, index) => `${index + 1}: ${event.title}`).join('\n');
+    const toRemove = prompt(`Enter the event number to remove:\n${eventTitles}`);
+    const index = parseInt(toRemove, 10) - 1;
+    if (index >= 0 && index < events.length) {
+      setEvents(events.filter((_, i) => i !== index));
+    } else {
+      alert('Invalid event number!');
+    }
   };
 
   return (
     <div>
-      <button onClick={addEvent}>Add Event</button>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+        <button onClick={addEvent} >Add Event</button>
+        <button onClick={removeEvent}>Remove Event</button>
+      </div>
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
@@ -45,7 +59,6 @@ export default function Calendar() {
               <div className="event-date">
                 {new Date(event.date).toLocaleString()}
               </div>
-              <button onClick={() => removeEvent(index)}>Remove</button>
             </div>
           ))
         ) : (
