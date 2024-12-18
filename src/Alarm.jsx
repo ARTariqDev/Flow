@@ -4,7 +4,11 @@ import audio from './alarm.mp3';
 import './App.css';
 
 const Alarm = () => {
-  const [alarms, setAlarms] = useState([]);
+  const [alarms, setAlarms] = useState(() => {
+    // Load alarms from localStorage if available
+    const savedAlarms = localStorage.getItem('alarms');
+    return savedAlarms ? JSON.parse(savedAlarms) : [];
+  });
   const [time, setTime] = useState('');
   const [intervalId, setIntervalId] = useState(null);
   const [activeAlarmIndex, setActiveAlarmIndex] = useState(null);
@@ -36,6 +40,9 @@ const Alarm = () => {
   };
 
   useEffect(() => {
+    // Save alarms to localStorage when it changes
+    localStorage.setItem('alarms', JSON.stringify(alarms));
+
     const checkAlarms = setInterval(() => {
       const now = new Date();
       const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;

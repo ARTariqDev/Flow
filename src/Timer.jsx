@@ -3,13 +3,16 @@ import audio from './alarm.mp3';
 import './App.css';
 
 const Timer = () => {
-  const [timers, setTimers] = useState([]);
+  const [timers, setTimers] = useState(() => {
+    // Load timers from localStorage if available
+    const savedTimers = localStorage.getItem('timers');
+    return savedTimers ? JSON.parse(savedTimers) : [];
+  });
   const [inputHours, setInputHours] = useState('');
   const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
   const alarmRef = useRef(null);
 
-  // Function to handle the form submission for adding a new timer
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const hours = Number(inputHours) || 0;
@@ -17,10 +20,10 @@ const Timer = () => {
     const seconds = Number(inputSeconds) || 0;
     const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
     const newTimer = {
-      id: Date.now(), // Unique ID for each timer
+      id: Date.now(),
       time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`,
       seconds: totalSeconds,
-      initialSeconds: totalSeconds, // Store initial time to restart timer
+      initialSeconds: totalSeconds,
       isRunning: false,
       isRinging: false,
     };
@@ -30,29 +33,19 @@ const Timer = () => {
     setInputSeconds('');
   };
 
-  // Function to start a specific timer
   const startTimer = (id) => {
     setTimers(timers.map(timer => {
       if (timer.id === id && timer.seconds > 0 && !timer.isRunning) {
-        return {
-          ...timer,
-          isRunning: true,
-          isRinging: false, // Reset ringing status when starting
-        };
+        return { ...timer, isRunning: true, isRinging: false };
       }
       return timer;
     }));
   };
 
-  // Function to stop a specific timer
   const stopTimer = (id) => {
     setTimers(timers.map(timer => {
       if (timer.id === id) {
-        return {
-          ...timer,
-          isRunning: false,
-          isRinging: false, // Stop ringing when stopped
-        };
+        return { ...timer, isRunning: false, isRinging: false };
       }
       return timer;
     }));
@@ -63,7 +56,6 @@ const Timer = () => {
     }
   };
 
-  // Function to restart a specific timer
   const restartTimer = (id) => {
     setTimers(timers.map(timer => {
       if (timer.id === id) {
@@ -87,7 +79,6 @@ const Timer = () => {
     }
   };
 
-  // Function to remove a specific timer
   const removeTimer = (id) => {
     setTimers(timers => {
       const updatedTimers = timers.filter(timer => timer.id !== id);
@@ -100,8 +91,10 @@ const Timer = () => {
     });
   };
 
-  // Effect to handle countdown for each timer
   useEffect(() => {
+    // Save timers to localStorage when it changes
+    localStorage.setItem('timers', JSON.stringify(timers));
+
     const interval = setInterval(() => {
       setTimers(prevTimers => {
         const updatedTimers = prevTimers.map(timer => {
@@ -131,7 +124,7 @@ const Timer = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [timers]);
 
   return (
     <div className="timer">

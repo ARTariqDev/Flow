@@ -1,3 +1,4 @@
+// App.jsx
 import './App.css';
 import React, { useState } from 'react';
 import Calendar from './Calendar';
@@ -5,6 +6,7 @@ import Timer from './Timer';
 import Alarm from './Alarm';
 import StopWatch from './StopWatch';
 import TodoList from './ToDo';
+import Home from './Home'; // Import the Home component
 
 function App() {
   const [activeTab, setActiveTab] = useState(0); // Active tab index
@@ -22,6 +24,8 @@ function App() {
         return <Alarm />;
       case 4:
         return <StopWatch />;
+      case 5:
+        return <Home />; // Render the Home component
       default:
         return null;
     }
@@ -63,6 +67,12 @@ function App() {
             onClick={() => setActiveTab(4)}
           >
             Stopwatch
+          </button>
+          <button
+            className={`tab-button ${activeTab === 5 ? 'active' : ''}`}
+            onClick={() => setActiveTab(5)}
+          >
+            Home
           </button>
         </div>
 
